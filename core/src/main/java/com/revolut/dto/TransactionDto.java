@@ -1,12 +1,13 @@
-package com.revolut.model;
+package com.revolut.dto;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+import com.revolut.model.Currency;
+import com.revolut.model.TransactionType;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -15,11 +16,9 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-@EqualsAndHashCode(callSuper = true)
-public class Transaction extends DomainEntity {
+public class TransactionDto {
 
-    private String uuid;
-    private Long accountId;
+    private String id;
     private TransactionType type;
     private String description;
     private BigDecimal amount;
