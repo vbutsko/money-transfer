@@ -4,6 +4,16 @@
 
 <web-app>
     <display-name>Money Transfer Rest Api</display-name>
+
+    <context-param>
+        <param-name>insertSampleData</param-name>
+        <param-value>true</param-value>
+    </context-param>
+
+    <listener>
+        <listener-class>com.revolut.web.SampleDataServletContextListener</listener-class>
+    </listener>
+
     <servlet>
         <servlet-name>Money Transfer Rest Api</servlet-name>
         <servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
