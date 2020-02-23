@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicLong;
 
 import com.revolut.dao.InMemoryDao;
 import com.revolut.dao.exception.ValidationException;
@@ -13,6 +14,8 @@ import com.revolut.model.Account;
 import com.revolut.model.Transaction;
 
 public class InMemoryAccountDao extends InMemoryDao<Account> implements AccountDao {
+
+    private static volatile AtomicLong dbIdGenerator = new AtomicLong(1);
 
     private static volatile InMemoryAccountDao instance;
 
@@ -53,8 +56,10 @@ public class InMemoryAccountDao extends InMemoryDao<Account> implements AccountD
                 }
             }
             if (accountIndex < entities.size()) {
+                copy.setId(entities.get(accountIndex).getId());
                 entities.set(accountIndex, copy);
             } else {
+                copy.setId(dbIdGenerator.getAndIncrement());
                 entities.add(copy);
             }
         }
@@ -89,12 +94,13 @@ public class InMemoryAccountDao extends InMemoryDao<Account> implements AccountD
     }
 
     private Account copyAccount(Account account) {
-        return Account.builder()
+        Account copy = Account.builder()
                 .uuid(account.getUuid())
                 .currency(account.getCurrency())
                 .total(account.getTotal())
                 .build();
-
+        copy.setId(account.getId());
+        return copy;
     }
 
     private List<Transaction> getTransactionHistory(String uuid) {

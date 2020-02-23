@@ -37,18 +37,16 @@ public class InMemoryAccountDaoTest {
     public void setUp() {
         accountDao = InMemoryAccountDao.getInstance();
         accountDao.deleteAll();
-        account1 = Account.builder()
+        account1 = accountDao.save(Account.builder()
                 .uuid(UUID_1)
                 .total(TOTAL_1)
                 .currency(CURRENCY_1)
-                .build();
-        account2 = Account.builder()
+                .build());
+        account2 = accountDao.save(Account.builder()
                 .uuid(UUID_2)
                 .total(TOTAL_2)
                 .currency(CURRENCY_2)
-                .build();
-        accountDao.save(account1);
-        accountDao.save(account2);
+                .build());
     }
 
     @Test
@@ -64,7 +62,7 @@ public class InMemoryAccountDaoTest {
         Account result = accountDao.save(newAccount);
 
         // then
-        assertThat(newAccount).isEqualTo(result);
+        assertThat(newAccount).isEqualToIgnoringGivenFields(result, "id");
     }
 
     @Test
@@ -82,8 +80,8 @@ public class InMemoryAccountDaoTest {
         Optional<Account> optionalAccount = accountDao.getEntity(UUID_2);
 
         // then
-        assertThat(updatedAccount).isEqualTo(result);
-        assertThat(optionalAccount).isPresent().get().isEqualTo(updatedAccount);
+        assertThat(updatedAccount).isEqualToIgnoringGivenFields(result, "id");
+        assertThat(optionalAccount).isPresent().get().isEqualToIgnoringGivenFields(updatedAccount, "id");
     }
 
     @Test
