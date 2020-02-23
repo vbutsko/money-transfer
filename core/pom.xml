@@ -18,6 +18,7 @@
     <dependency>
       <groupId>com.revolut</groupId>
       <artifactId>dao</artifactId>
+      <version>1.0-SNAPSHOT</version>
     </dependency>
   </dependencies>
 

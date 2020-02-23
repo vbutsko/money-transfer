@@ -4,17 +4,28 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
+import com.revolut.dao.exception.ValidationException;
+import com.revolut.dao.transation.InMemoryTransactionDao;
 import com.revolut.model.Account;
 import com.revolut.model.Currency;
 import com.revolut.model.Transaction;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
+@RunWith(PowerMockRunner.class)
+@PrepareForTest({InMemoryTransactionDao.class})
 public class InMemoryAccountDaoTest {
 
     private static final String UUID_1 = "account-1";
@@ -23,7 +34,6 @@ public class InMemoryAccountDaoTest {
     private static final BigDecimal TOTAL_2 = BigDecimal.valueOf(200);
     private static final Currency CURRENCY_1 = Currency.USD;
     private static final Currency CURRENCY_2 = Currency.EUR;
-    private static final List<Transaction> TRANSACTIONS_1 = emptyList();
     private static final List<Transaction> TRANSACTIONS_2 = singletonList(
             Transaction.builder()
                     .build()
@@ -31,7 +41,15 @@ public class InMemoryAccountDaoTest {
     private Account account1;
     private Account account2;
 
+    private static InMemoryTransactionDao transactionDao;
+
     private InMemoryAccountDao accountDao;
+
+    @BeforeClass
+    public static void globalSetUp() throws Exception {
+        transactionDao = mock(InMemoryTransactionDao.class);
+        PowerMockito.whenNew(InMemoryTransactionDao.class).withAnyArguments().thenReturn(transactionDao);
+    }
 
     @Before
     public void setUp() {
@@ -84,23 +102,30 @@ public class InMemoryAccountDaoTest {
         assertThat(optionalAccount).isPresent().get().isEqualToIgnoringGivenFields(updatedAccount, "id");
     }
 
+    @Test(expected = ValidationException.class)
+    public void shouldThrowValidationException() {
+        // when
+        accountDao.save(Account.builder().build());
+    }
+
     @Test
     public void shouldNotUpdateTransactionHistory() {
         // given
         Account updatedAccount = Account.builder()
-                .uuid(UUID_1)
+                .uuid(UUID_2)
                 .total(BigDecimal.ONE)
                 .currency(Currency.USD)
-                .transactionHistory(TRANSACTIONS_2)
+                .transactionHistory(singletonList(Transaction.builder().build()))
                 .build();
+        when(transactionDao.getEntities(account2.getId())).thenReturn(TRANSACTIONS_2);
 
         // when
         Account result = accountDao.save(updatedAccount);
-        Optional<Account> optionalAccount = accountDao.getEntity(UUID_1);
+        Optional<Account> optionalAccount = accountDao.getEntity(UUID_2);
 
         // then
-        assertThat(result.getTransactionHistory()).isEqualTo(TRANSACTIONS_1);
-        assertThat(optionalAccount.map(Account::getTransactionHistory)).isPresent().get().isEqualTo(TRANSACTIONS_1);
+        assertThat(result.getTransactionHistory()).isEqualTo(TRANSACTIONS_2);
+        assertThat(optionalAccount.map(Account::getTransactionHistory)).isPresent().get().isEqualTo(TRANSACTIONS_2);
     }
 
     @Test
