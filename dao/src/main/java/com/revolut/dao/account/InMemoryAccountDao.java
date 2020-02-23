@@ -27,7 +27,7 @@ public class InMemoryAccountDao extends InMemoryDao<Account> implements AccountD
         transactionDao = InMemoryTransactionDao.getInstance();
     }
 
-    public static InMemoryAccountDao getInstance() {
+    public synchronized static InMemoryAccountDao getInstance() {
         if (instance == null) {
             instance = new InMemoryAccountDao();
         }

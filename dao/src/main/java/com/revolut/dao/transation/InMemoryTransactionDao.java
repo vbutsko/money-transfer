@@ -22,7 +22,7 @@ public class InMemoryTransactionDao extends InMemoryDao<Transaction> implements 
 
     private static volatile InMemoryTransactionDao instance;
 
-    public static InMemoryTransactionDao getInstance() {
+    public synchronized static InMemoryTransactionDao getInstance() {
         if (instance == null) {
             instance = new InMemoryTransactionDao();
         }
