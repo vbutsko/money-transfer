@@ -93,9 +93,9 @@ public class InMemoryTransactionDaoTest {
         transactionDao.save(Transaction.builder()
                 .uuid(UUID_3)
                 .accountId(ACCOUNT_ID_1)
-                .amount(AMOUNT_1)
-                .description(DESCRIPTION_1)
-                .type(TYPE_1)
+                .amount(AMOUNT_3)
+                .description(DESCRIPTION_3)
+                .type(TYPE_3)
                 .build());
     }
 
@@ -104,10 +104,10 @@ public class InMemoryTransactionDaoTest {
         // when
         transactionDao.save(Transaction.builder()
                 .uuid(UUID_3)
-                .amount(AMOUNT_1)
-                .description(DESCRIPTION_1)
-                .currency(CURRENCY_1)
-                .type(TYPE_1)
+                .amount(AMOUNT_3)
+                .description(DESCRIPTION_3)
+                .currency(CURRENCY_3)
+                .type(TYPE_3)
                 .build());
     }
 
@@ -117,9 +117,9 @@ public class InMemoryTransactionDaoTest {
         transactionDao.save(Transaction.builder()
                 .uuid(UUID_3)
                 .accountId(ACCOUNT_ID_1)
-                .description(DESCRIPTION_1)
-                .currency(CURRENCY_1)
-                .type(TYPE_1)
+                .description(DESCRIPTION_3)
+                .currency(CURRENCY_3)
+                .type(TYPE_3)
                 .build());
     }
 
@@ -129,9 +129,9 @@ public class InMemoryTransactionDaoTest {
         transactionDao.save(Transaction.builder()
                 .uuid(UUID_3)
                 .accountId(ACCOUNT_ID_1)
-                .amount(AMOUNT_1)
-                .description(DESCRIPTION_1)
-                .currency(CURRENCY_1)
+                .amount(AMOUNT_3)
+                .description(DESCRIPTION_3)
+                .currency(CURRENCY_3)
                 .build());
     }
 
@@ -141,10 +141,10 @@ public class InMemoryTransactionDaoTest {
         Transaction transaction = transactionDao.save(Transaction.builder()
                 .uuid(UUID_3)
                 .accountId(ACCOUNT_ID_1)
-                .amount(AMOUNT_1)
-                .description(DESCRIPTION_1)
+                .amount(AMOUNT_3)
+                .description(DESCRIPTION_3)
                 .currency(CURRENCY_3)
-                .type(TYPE_1)
+                .type(TYPE_3)
                 .build());
 
 
