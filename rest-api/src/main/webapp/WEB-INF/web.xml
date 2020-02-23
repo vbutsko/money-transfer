@@ -10,7 +10,7 @@
 
         <init-param>
             <param-name>com.sun.jersey.config.property.packages</param-name>
-            <param-value>com.revolut</param-value>
+            <param-value>com.revolut.web</param-value>
         </init-param>
 
         <load-on-startup>1</load-on-startup>
@@ -18,7 +18,7 @@
 
     <servlet-mapping>
         <servlet-name>Money Transfer Rest Api</servlet-name>
-        <url-pattern>/*</url-pattern>
+        <url-pattern>/v1/*</url-pattern>
     </servlet-mapping>
 
 </web-app>
