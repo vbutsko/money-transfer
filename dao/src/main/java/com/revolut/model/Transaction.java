@@ -1,12 +1,14 @@
 package com.revolut.model;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Builder
 @Getter
@@ -15,9 +17,12 @@ import lombok.NoArgsConstructor;
 public class Transaction extends DomainEntity {
 
     private String uuid;
+    private Long accountId;
     private TransactionType type;
-    private String from;
+    private String description;
     private BigDecimal amount;
     private Currency currency;
+    @Setter
+    private LocalDateTime createdAt;
 
 }
