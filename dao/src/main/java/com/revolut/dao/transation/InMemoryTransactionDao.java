@@ -8,8 +8,8 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 
 import com.revolut.dao.InMemoryDao;
+import com.revolut.dao.model.Transaction;
 import com.revolut.dao.exception.ValidationException;
-import com.revolut.model.Transaction;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 

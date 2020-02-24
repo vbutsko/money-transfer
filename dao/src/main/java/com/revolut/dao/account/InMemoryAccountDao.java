@@ -6,13 +6,14 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
+
 
 import com.revolut.dao.InMemoryDao;
 import com.revolut.dao.exception.ValidationException;
 import com.revolut.dao.transation.InMemoryTransactionDao;
 import com.revolut.dao.transation.TransactionDao;
-import com.revolut.model.Account;
-import com.revolut.model.Transaction;
+import com.revolut.dao.model.Account;
 
 //TODO: delete operation should save history in some way
 public class InMemoryAccountDao extends InMemoryDao<Account> implements AccountDao {
@@ -40,10 +41,7 @@ public class InMemoryAccountDao extends InMemoryDao<Account> implements AccountD
                 .filter(account -> Objects.equals(account.getUuid(), uuid))
                 .findFirst()
                 .map(this::copy)
-                .map(account -> {
-                    account.setTransactionHistory(getTransactionHistory(account.getId()));
-                    return account;
-                });
+                .map(this::setTransactionHistory);
     }
 
     @Override
@@ -68,8 +66,7 @@ public class InMemoryAccountDao extends InMemoryDao<Account> implements AccountD
             }
         }
         copy = copy(entities.get(accountIndex));
-        copy.setTransactionHistory(getTransactionHistory(copy.getId()));
-        return copy;
+        return setTransactionHistory(copy);
     }
 
     @Override
@@ -99,6 +96,16 @@ public class InMemoryAccountDao extends InMemoryDao<Account> implements AccountD
         return removed;
     }
 
+    @Override
+    public List<Account> getAll() {
+        synchronized (entities) {
+            return entities.stream()
+                    .map(this::copy)
+                    .map(this::setTransactionHistory)
+                    .collect(Collectors.toList());
+        }
+    }
+
     private Account copy(Account account) {
         Account copy = Account.builder()
                 .uuid(account.getUuid())
@@ -109,8 +116,9 @@ public class InMemoryAccountDao extends InMemoryDao<Account> implements AccountD
         return copy;
     }
 
-    private List<Transaction> getTransactionHistory(Long id) {
-        return transactionDao.getEntities(id);
+    private Account setTransactionHistory(Account account) {
+        account.setTransactionHistory(transactionDao.getEntities(account.getId()));
+        return account;
     }
 
     private void validate(Account account) {

@@ -4,10 +4,10 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
+import com.revolut.dao.model.Currency;
+import com.revolut.dao.model.Transaction;
+import com.revolut.dao.model.TransactionType;
 import com.revolut.dao.exception.ValidationException;
-import com.revolut.model.Currency;
-import com.revolut.model.Transaction;
-import com.revolut.model.TransactionType;
 import org.junit.Before;
 import org.junit.Test;
 

@@ -3,7 +3,7 @@ package com.revolut.dao;
 import java.util.List;
 import java.util.Optional;
 
-import com.revolut.model.DomainEntity;
+import com.revolut.dao.model.DomainEntity;
 
 public interface Dao<T extends DomainEntity> {
 

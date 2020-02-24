@@ -1,7 +1,7 @@
-package com.revolut.model;
+package com.revolut.dao.model;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.util.List;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -11,20 +11,22 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import static java.util.Collections.emptyList;
+
 @Builder
 @Getter
+@Setter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @EqualsAndHashCode(callSuper = true)
-public class Transaction extends DomainEntity {
+public class Account extends DomainEntity {
 
     private String uuid;
-    private Long accountId;
-    private TransactionType type;
-    private String description;
-    private BigDecimal amount;
-    private Currency currency;
-    @Setter
-    private LocalDateTime createdAt;
+    @Builder.Default
+    private BigDecimal total = BigDecimal.ZERO;
+    @Builder.Default
+    private Currency currency = Currency.USD;
+    @Builder.Default
+    private List<Transaction> transactionHistory = emptyList();
 
 }

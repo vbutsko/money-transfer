@@ -1,4 +1,4 @@
-package com.revolut.model;
+package com.revolut.dao.model;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;

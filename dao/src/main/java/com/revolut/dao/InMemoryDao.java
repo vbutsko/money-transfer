@@ -3,7 +3,7 @@ package com.revolut.dao;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.revolut.model.DomainEntity;
+import com.revolut.dao.model.DomainEntity;
 
 public abstract class InMemoryDao<T extends DomainEntity> implements Dao<T> {
 

@@ -1,4 +1,4 @@
-package com.revolut.model;
+package com.revolut.dao.model;
 
 public enum Currency {
 
