@@ -1,4 +1,4 @@
-package com.revolut.web;
+package com.revolut.web.listener;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -7,12 +7,12 @@ import java.time.LocalDateTime;
 
 import com.revolut.dao.account.AccountDao;
 import com.revolut.dao.account.InMemoryAccountDao;
+import com.revolut.dao.model.Account;
+import com.revolut.dao.model.Currency;
+import com.revolut.dao.model.Transaction;
+import com.revolut.dao.model.TransactionType;
 import com.revolut.dao.transation.InMemoryTransactionDao;
 import com.revolut.dao.transation.TransactionDao;
-import com.revolut.model.Account;
-import com.revolut.model.Currency;
-import com.revolut.model.Transaction;
-import com.revolut.model.TransactionType;
 
 public class SampleDataServletContextListener implements ServletContextListener {
     private final static String INSERT_SAMPLE_DATA_PARAMETER = "insertSampleData";

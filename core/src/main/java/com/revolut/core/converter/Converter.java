@@ -1,4 +1,4 @@
-package com.revolut.converter;
+package com.revolut.core.converter;
 
 import java.util.Collection;
 import java.util.Collections;

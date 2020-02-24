@@ -1,11 +1,11 @@
-package com.revolut.service;
+package com.revolut.core.service;
 
-import java.util.Optional;
+import java.util.List;
 
-import com.revolut.converter.AccountEntityToDtoConverter;
+import com.revolut.core.converter.AccountEntityToDtoConverter;
+import com.revolut.core.dto.AccountDto;
 import com.revolut.dao.account.AccountDao;
 import com.revolut.dao.account.InMemoryAccountDao;
-import com.revolut.dto.AccountDto;
 
 public class AccountService {
 
@@ -27,8 +27,8 @@ public class AccountService {
         accountEntityToDtoConverter = new AccountEntityToDtoConverter();
     }
 
-    public Optional<AccountDto> getById(String id) {
-        return accountDao.getEntity(id).map(accountEntityToDtoConverter::convert);
+    public List<AccountDto> getAll() {
+        return accountEntityToDtoConverter.convertCollection(accountDao.getAll());
     }
 
 }

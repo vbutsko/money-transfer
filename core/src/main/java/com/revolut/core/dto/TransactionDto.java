@@ -1,10 +1,10 @@
-package com.revolut.dto;
+package com.revolut.core.dto;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-import com.revolut.model.Currency;
-import com.revolut.model.TransactionType;
+import com.revolut.dao.model.Currency;
+import com.revolut.dao.model.TransactionType;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,15 +1,17 @@
-package com.revolut.dto;
+package com.revolut.core.dto;
 
 import java.math.BigDecimal;
 import java.util.List;
 
-import com.revolut.model.Currency;
+import com.revolut.dao.model.Currency;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import static java.util.Collections.emptyList;
 
 @Builder
 @Getter
@@ -19,10 +21,9 @@ import lombok.NoArgsConstructor;
 public class AccountDto {
 
     private String id;
-    @Builder.Default
     private BigDecimal total;
-    @Builder.Default
     private Currency currency;
     @Builder.Default
-    private List<TransactionDto> transactionHistory;
+    private List<TransactionDto> transactionHistory = emptyList();
+
 }

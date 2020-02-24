@@ -1,7 +1,7 @@
-package com.revolut.converter;
+package com.revolut.core.converter;
 
-import com.revolut.dto.AccountDto;
-import com.revolut.model.Account;
+import com.revolut.dao.model.Account;
+import com.revolut.core.dto.AccountDto;
 
 public class AccountEntityToDtoConverter implements Converter<Account, AccountDto> {
 

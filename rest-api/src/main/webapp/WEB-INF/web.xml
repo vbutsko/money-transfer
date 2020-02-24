@@ -11,7 +11,7 @@
     </context-param>
 
     <listener>
-        <listener-class>com.revolut.web.SampleDataServletContextListener</listener-class>
+        <listener-class>com.revolut.web.listener.SampleDataServletContextListener</listener-class>
     </listener>
 
     <servlet>

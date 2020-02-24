@@ -1,7 +1,7 @@
-package com.revolut.converter;
+package com.revolut.core.converter;
 
-import com.revolut.dto.TransactionDto;
-import com.revolut.model.Transaction;
+import com.revolut.dao.model.Transaction;
+import com.revolut.core.dto.TransactionDto;
 
 public class TransactionEntityToDtoConverter implements Converter<Transaction, TransactionDto> {
 
