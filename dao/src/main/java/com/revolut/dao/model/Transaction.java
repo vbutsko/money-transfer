@@ -18,8 +18,10 @@ import lombok.Setter;
 @EqualsAndHashCode(callSuper = true)
 public class Transaction extends DomainEntity {
 
+    @Setter
     private String uuid;
-    private Long accountId;
+    private Long ownerAccountId;
+    private Long otherAccountId;
     private TransactionType type;
     private String description;
     private BigDecimal amount;

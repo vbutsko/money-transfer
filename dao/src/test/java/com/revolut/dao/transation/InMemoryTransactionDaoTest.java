@@ -30,7 +30,7 @@ public class InMemoryTransactionDaoTest {
     private static final Currency CURRENCY_2 = Currency.EUR;
     private static final Currency CURRENCY_3 = Currency.USD;
     private static final TransactionType TYPE_1 = TransactionType.TRANSFER_BETWEEN_ACCOUNTS;
-    private static final TransactionType TYPE_2 = TransactionType.CONVERSATION;
+    private static final TransactionType TYPE_2 = TransactionType.CONVERTATION;
     private static final TransactionType TYPE_3 = TransactionType.TRANSFER_BETWEEN_ACCOUNTS;
 
     private InMemoryTransactionDao transactionDao;
@@ -39,12 +39,13 @@ public class InMemoryTransactionDaoTest {
     private Transaction transaction2;
 
     @Before
-    public void setUp() {
+    public void setUp() throws DaoValidationException {
         transactionDao = InMemoryTransactionDao.getInstance();
         transactionDao.deleteAll();
         transaction1 = transactionDao.save(Transaction.builder()
                 .uuid(UUID_1)
-                .accountId(ACCOUNT_ID_1)
+                .ownerAccountId(ACCOUNT_ID_1)
+                .otherAccountId(ACCOUNT_ID_2)
                 .amount(AMOUNT_1)
                 .description(DESCRIPTION_1)
                 .currency(CURRENCY_1)
@@ -52,7 +53,8 @@ public class InMemoryTransactionDaoTest {
                 .build());
         transaction2 = transactionDao.save(Transaction.builder()
                 .uuid(UUID_2)
-                .accountId(ACCOUNT_ID_2)
+                .ownerAccountId(ACCOUNT_ID_2)
+                .otherAccountId(ACCOUNT_ID_1)
                 .amount(AMOUNT_2)
                 .description(DESCRIPTION_2)
                 .currency(CURRENCY_2)
@@ -61,11 +63,12 @@ public class InMemoryTransactionDaoTest {
     }
 
     @Test
-    public void shouldAddNewTransaction() {
+    public void shouldAddNewTransaction() throws DaoValidationException {
         // given
         Transaction newTransaction = Transaction.builder()
                 .uuid(UUID_3)
-                .accountId(ACCOUNT_ID_1)
+                .ownerAccountId(ACCOUNT_ID_1)
+                .otherAccountId(ACCOUNT_ID_2)
                 .amount(BigDecimal.ONE)
                 .description(DESCRIPTION_3)
                 .currency(CURRENCY_3)
@@ -82,17 +85,18 @@ public class InMemoryTransactionDaoTest {
     }
 
     @Test(expected = DaoValidationException.class)
-    public void shouldThrowValidationExceptionCauseIdIsNotNull() {
+    public void shouldThrowValidationExceptionCauseIdIsNotNull() throws DaoValidationException {
         // when
         transactionDao.save(transaction1);
     }
 
     @Test(expected = DaoValidationException.class)
-    public void shouldThrowValidationExceptionCauseCurrencyMissed() {
+    public void shouldThrowValidationExceptionCauseCurrencyMissed() throws DaoValidationException {
         // when
         transactionDao.save(Transaction.builder()
                 .uuid(UUID_3)
-                .accountId(ACCOUNT_ID_1)
+                .ownerAccountId(ACCOUNT_ID_1)
+                .otherAccountId(ACCOUNT_ID_2)
                 .amount(AMOUNT_3)
                 .description(DESCRIPTION_3)
                 .type(TYPE_3)
@@ -100,7 +104,7 @@ public class InMemoryTransactionDaoTest {
     }
 
     @Test(expected = DaoValidationException.class)
-    public void shouldThrowValidationExceptionCauseAccountIdMissed() {
+    public void shouldThrowValidationExceptionCauseAccountIdMissed() throws DaoValidationException {
         // when
         transactionDao.save(Transaction.builder()
                 .uuid(UUID_3)
@@ -112,11 +116,12 @@ public class InMemoryTransactionDaoTest {
     }
 
     @Test(expected = DaoValidationException.class)
-    public void shouldThrowValidationExceptionCauseAmountMissed() {
+    public void shouldThrowValidationExceptionCauseAmountMissed() throws DaoValidationException {
         // when
         transactionDao.save(Transaction.builder()
                 .uuid(UUID_3)
-                .accountId(ACCOUNT_ID_1)
+                .ownerAccountId(ACCOUNT_ID_1)
+                .otherAccountId(ACCOUNT_ID_2)
                 .description(DESCRIPTION_3)
                 .currency(CURRENCY_3)
                 .type(TYPE_3)
@@ -124,11 +129,12 @@ public class InMemoryTransactionDaoTest {
     }
 
     @Test(expected = DaoValidationException.class)
-    public void shouldThrowValidationExceptionCauseTypeMissed() {
+    public void shouldThrowValidationExceptionCauseTypeMissed() throws DaoValidationException {
         // when
         transactionDao.save(Transaction.builder()
                 .uuid(UUID_3)
-                .accountId(ACCOUNT_ID_1)
+                .ownerAccountId(ACCOUNT_ID_1)
+                .otherAccountId(ACCOUNT_ID_2)
                 .amount(AMOUNT_3)
                 .description(DESCRIPTION_3)
                 .currency(CURRENCY_3)
@@ -136,11 +142,12 @@ public class InMemoryTransactionDaoTest {
     }
 
     @Test
-    public void shouldFindTransactionsByAccountId() {
+    public void shouldFindTransactionsByAccountId() throws DaoValidationException {
         // given
         Transaction transaction = transactionDao.save(Transaction.builder()
                 .uuid(UUID_3)
-                .accountId(ACCOUNT_ID_1)
+                .ownerAccountId(ACCOUNT_ID_1)
+                .otherAccountId(ACCOUNT_ID_2)
                 .amount(AMOUNT_3)
                 .description(DESCRIPTION_3)
                 .currency(CURRENCY_3)

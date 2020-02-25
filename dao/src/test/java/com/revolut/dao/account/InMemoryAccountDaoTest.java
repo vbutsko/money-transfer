@@ -52,7 +52,7 @@ public class InMemoryAccountDaoTest {
     }
 
     @Before
-    public void setUp() {
+    public void setUp() throws DaoValidationException {
         accountDao = InMemoryAccountDao.getInstance();
         accountDao.deleteAll();
         account1 = accountDao.save(Account.builder()
@@ -68,7 +68,7 @@ public class InMemoryAccountDaoTest {
     }
 
     @Test
-    public void shouldAddNewAccount() {
+    public void shouldAddNewAccount() throws DaoValidationException {
         // given
         Account newAccount = Account.builder()
                 .uuid("account-3")
@@ -84,7 +84,7 @@ public class InMemoryAccountDaoTest {
     }
 
     @Test
-    public void shouldReplaceAccount() {
+    public void shouldReplaceAccount() throws DaoValidationException {
         // given
         Account updatedAccount = Account.builder()
                 .uuid(UUID_2)
@@ -103,13 +103,13 @@ public class InMemoryAccountDaoTest {
     }
 
     @Test(expected = DaoValidationException.class)
-    public void shouldThrowValidationException() {
+    public void shouldThrowValidationException() throws DaoValidationException {
         // when
         accountDao.save(Account.builder().build());
     }
 
     @Test
-    public void shouldNotUpdateTransactionHistory() {
+    public void shouldNotUpdateTransactionHistory() throws DaoValidationException {
         // given
         Account updatedAccount = Account.builder()
                 .uuid(UUID_2)

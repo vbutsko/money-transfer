@@ -1,6 +1,8 @@
 package com.revolut.dao.exception;
 
-public class DaoValidationException extends RuntimeException {
+import java.io.IOException;
+
+public class DaoValidationException extends IOException {
 
     public DaoValidationException(String message) {
         super(message);

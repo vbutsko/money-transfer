@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicLong;
 
 import com.revolut.dao.InMemoryDao;
@@ -33,7 +34,7 @@ public class InMemoryTransactionDao extends InMemoryDao<Transaction> implements 
     public List<Transaction> getEntities(Long accountId) {
         synchronized (entities) {
             return entities.stream()
-                    .filter(transaction -> Objects.equals(transaction.getAccountId(), accountId))
+                    .filter(transaction -> Objects.equals(transaction.getOwnerAccountId(), accountId))
                     .collect(toList());
         }
     }
@@ -49,9 +50,10 @@ public class InMemoryTransactionDao extends InMemoryDao<Transaction> implements 
     }
 
     @Override
-    public Transaction save(Transaction transaction) {
+    public Transaction save(Transaction transaction) throws DaoValidationException {
         validate(transaction);
         Transaction copy = copy(transaction);
+        transaction.setUuid(UUID.randomUUID().toString());
         int newIndex;
         synchronized (entities) {
             copy.setId(dbIdGenerator.getAndIncrement());
@@ -77,7 +79,7 @@ public class InMemoryTransactionDao extends InMemoryDao<Transaction> implements 
         }
     }
 
-    private void validate(Transaction transaction) {
+    private void validate(Transaction transaction) throws DaoValidationException {
         List<String> validationErrors = new ArrayList<>();
         if (transaction.getId() != null) {
             validationErrors.add("id is not null");
@@ -85,8 +87,11 @@ public class InMemoryTransactionDao extends InMemoryDao<Transaction> implements 
         if (transaction.getCurrency() == null) {
             validationErrors.add("currency is null");
         }
-        if (transaction.getAccountId() == null) {
-            validationErrors.add("accountId is null");
+        if (transaction.getOwnerAccountId() == null) {
+            validationErrors.add("ownerAccountId is null");
+        }
+        if (transaction.getOtherAccountId() == null) {
+            validationErrors.add("otherAccountId is null");
         }
         if (transaction.getAmount() == null) {
             validationErrors.add("amount is null");
@@ -104,7 +109,8 @@ public class InMemoryTransactionDao extends InMemoryDao<Transaction> implements 
     private Transaction copy(Transaction transaction) {
         Transaction copy = Transaction.builder()
                 .uuid(transaction.getUuid())
-                .accountId(transaction.getAccountId())
+                .ownerAccountId(transaction.getOwnerAccountId())
+                .otherAccountId(transaction.getOtherAccountId())
                 .amount(transaction.getAmount())
                 .currency(transaction.getCurrency())
                 .type(transaction.getType())

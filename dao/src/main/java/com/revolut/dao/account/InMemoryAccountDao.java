@@ -5,15 +5,15 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
-
 import com.revolut.dao.InMemoryDao;
 import com.revolut.dao.exception.DaoValidationException;
+import com.revolut.dao.model.Account;
 import com.revolut.dao.transation.InMemoryTransactionDao;
 import com.revolut.dao.transation.TransactionDao;
-import com.revolut.dao.model.Account;
 
 //TODO: delete operation should save history in some way
 public class InMemoryAccountDao extends InMemoryDao<Account> implements AccountDao {
@@ -45,9 +45,12 @@ public class InMemoryAccountDao extends InMemoryDao<Account> implements AccountD
     }
 
     @Override
-    public Account save(Account account) {
+    public Account save(Account account) throws DaoValidationException {
         validate(account);
         Account copy = copy(account);
+        if (copy.getUuid() == null) {
+            copy.setUuid(UUID.randomUUID().toString());
+        }
         int accountIndex = entities.size();
         synchronized (entities) {
             for (int i = 0; i < entities.size(); i++) {
@@ -120,7 +123,7 @@ public class InMemoryAccountDao extends InMemoryDao<Account> implements AccountD
         return account;
     }
 
-    private void validate(Account account) {
+    private void validate(Account account) throws DaoValidationException {
         if (account.getUuid() == null || account.getCurrency() == null) {
             throw new DaoValidationException("Account uuid and currency can't be null");
         }
