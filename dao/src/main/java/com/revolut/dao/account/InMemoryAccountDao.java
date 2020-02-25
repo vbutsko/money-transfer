@@ -108,6 +108,31 @@ public class InMemoryAccountDao extends InMemoryDao<Account> implements AccountD
         }
     }
 
+    @Override
+    public boolean updateAccounts(List<Account> accounts) {
+        synchronized (entities) {
+            List<Account> validForUpdate = accounts.stream()
+                    .map(account -> getEntity(account.getUuid())
+                            .filter(savedAccount -> savedAccount.getTransactionHistory().size() - 1 == account.getTransactionHistory()
+                                    .size()
+                                    && savedAccount.getTransactionHistory().containsAll(account.getTransactionHistory())))
+                    .filter(Optional::isPresent)
+                    .map(Optional::get)
+                    .collect(Collectors.toList());
+            if (validForUpdate.size() == accounts.size()) {
+                try {
+                    for (Account account : accounts) {
+                        save(account);
+                    }
+                    return true;
+                } catch (DaoValidationException e) {
+                    rollBack(validForUpdate);
+                }
+            }
+            return false;
+        }
+    }
+
     private Account copy(Account account) {
         Account copy = Account.builder()
                 .uuid(account.getUuid())
@@ -126,6 +151,17 @@ public class InMemoryAccountDao extends InMemoryDao<Account> implements AccountD
     private void validate(Account account) throws DaoValidationException {
         if (account.getUuid() == null || account.getCurrency() == null) {
             throw new DaoValidationException("Account uuid and currency can't be null");
+        }
+    }
+
+    private void rollBack(List<Account> accounts) {
+        // should be logic to revert to previous db state as part of transaction
+        try {
+            for (Account account : accounts) {
+                save(account);
+            }
+        } catch (DaoValidationException ex) {
+            throw new Error("Application failed");
         }
     }
 

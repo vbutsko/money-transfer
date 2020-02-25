@@ -9,4 +9,6 @@ public interface AccountDao extends Dao<Account> {
 
     List<Account> getAll();
 
+    boolean updateAccounts(List<Account> accounts);
+
 }
