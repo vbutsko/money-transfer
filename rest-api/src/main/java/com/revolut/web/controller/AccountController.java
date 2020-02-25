@@ -14,6 +14,7 @@ import com.google.gson.Gson;
 import com.revolut.core.dto.AccountCreateDto;
 import com.revolut.core.dto.AccountDto;
 import com.revolut.core.service.AccountService;
+import com.revolut.core.service.impl.DefaultAccountService;
 
 import static javax.ws.rs.core.Response.Status.OK;
 
@@ -22,7 +23,7 @@ public class AccountController {
 
     private final Gson json = new Gson();
 
-    private AccountService accountService = AccountService.getInstance();
+    private AccountService accountService = DefaultAccountService.getInstance();
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
