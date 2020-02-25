@@ -9,7 +9,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import com.revolut.dao.InMemoryDao;
 import com.revolut.dao.model.Transaction;
-import com.revolut.dao.exception.ValidationException;
+import com.revolut.dao.exception.DaoValidationException;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -97,7 +97,7 @@ public class InMemoryTransactionDao extends InMemoryDao<Transaction> implements 
         if (!validationErrors.isEmpty()) {
             String message = String.format("Validation for transaction is failed cause: %s.",
                     String.join("; ", validationErrors));
-            throw new ValidationException(message);
+            throw new DaoValidationException(message);
         }
     }
 

@@ -4,7 +4,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
-import com.revolut.dao.exception.ValidationException;
+import com.revolut.core.exception.ValidationException;
 
 @Provider
 public class ValidationExceptionHandler implements ExceptionMapper<ValidationException>

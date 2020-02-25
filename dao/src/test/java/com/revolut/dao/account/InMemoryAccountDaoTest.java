@@ -6,7 +6,7 @@ import java.util.Optional;
 
 import com.revolut.dao.model.Currency;
 import com.revolut.dao.model.Transaction;
-import com.revolut.dao.exception.ValidationException;
+import com.revolut.dao.exception.DaoValidationException;
 import com.revolut.dao.transation.InMemoryTransactionDao;
 import com.revolut.dao.model.Account;
 import org.junit.Before;
@@ -102,7 +102,7 @@ public class InMemoryAccountDaoTest {
         assertThat(optionalAccount).isPresent().get().isEqualToIgnoringGivenFields(updatedAccount, "id");
     }
 
-    @Test(expected = ValidationException.class)
+    @Test(expected = DaoValidationException.class)
     public void shouldThrowValidationException() {
         // when
         accountDao.save(Account.builder().build());

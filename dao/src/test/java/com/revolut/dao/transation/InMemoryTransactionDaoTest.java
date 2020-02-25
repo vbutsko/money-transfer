@@ -7,7 +7,7 @@ import java.util.Optional;
 import com.revolut.dao.model.Currency;
 import com.revolut.dao.model.Transaction;
 import com.revolut.dao.model.TransactionType;
-import com.revolut.dao.exception.ValidationException;
+import com.revolut.dao.exception.DaoValidationException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -81,13 +81,13 @@ public class InMemoryTransactionDaoTest {
         assertThat(result.getCreatedAt()).isNotNull();
     }
 
-    @Test(expected = ValidationException.class)
+    @Test(expected = DaoValidationException.class)
     public void shouldThrowValidationExceptionCauseIdIsNotNull() {
         // when
         transactionDao.save(transaction1);
     }
 
-    @Test(expected = ValidationException.class)
+    @Test(expected = DaoValidationException.class)
     public void shouldThrowValidationExceptionCauseCurrencyMissed() {
         // when
         transactionDao.save(Transaction.builder()
@@ -99,7 +99,7 @@ public class InMemoryTransactionDaoTest {
                 .build());
     }
 
-    @Test(expected = ValidationException.class)
+    @Test(expected = DaoValidationException.class)
     public void shouldThrowValidationExceptionCauseAccountIdMissed() {
         // when
         transactionDao.save(Transaction.builder()
@@ -111,7 +111,7 @@ public class InMemoryTransactionDaoTest {
                 .build());
     }
 
-    @Test(expected = ValidationException.class)
+    @Test(expected = DaoValidationException.class)
     public void shouldThrowValidationExceptionCauseAmountMissed() {
         // when
         transactionDao.save(Transaction.builder()
@@ -123,7 +123,7 @@ public class InMemoryTransactionDaoTest {
                 .build());
     }
 
-    @Test(expected = ValidationException.class)
+    @Test(expected = DaoValidationException.class)
     public void shouldThrowValidationExceptionCauseTypeMissed() {
         // when
         transactionDao.save(Transaction.builder()

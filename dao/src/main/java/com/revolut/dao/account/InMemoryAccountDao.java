@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 
 import com.revolut.dao.InMemoryDao;
-import com.revolut.dao.exception.ValidationException;
+import com.revolut.dao.exception.DaoValidationException;
 import com.revolut.dao.transation.InMemoryTransactionDao;
 import com.revolut.dao.transation.TransactionDao;
 import com.revolut.dao.model.Account;
@@ -46,7 +46,6 @@ public class InMemoryAccountDao extends InMemoryDao<Account> implements AccountD
 
     @Override
     public Account save(Account account) {
-        // validate account
         validate(account);
         Account copy = copy(account);
         int accountIndex = entities.size();
@@ -123,7 +122,7 @@ public class InMemoryAccountDao extends InMemoryDao<Account> implements AccountD
 
     private void validate(Account account) {
         if (account.getUuid() == null || account.getCurrency() == null) {
-            throw new ValidationException("Account uuid and currency can't be null");
+            throw new DaoValidationException("Account uuid and currency can't be null");
         }
     }
 
