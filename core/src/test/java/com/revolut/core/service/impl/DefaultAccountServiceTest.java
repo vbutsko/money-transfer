@@ -1,4 +1,4 @@
-package com.revolut.core;
+package com.revolut.core.service.impl;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
