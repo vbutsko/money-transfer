@@ -86,11 +86,11 @@ public class TransferTransactionService implements TransactionService<TransferTr
     }
 
     private void validateTransactionCreateDto(TransferTransactionCreateDto createDto) {
-        if (createDto.getDestinationAccountId() == null || createDto.getAmount() == null) {
-            throw new ValidationException("Transaction should contain not null and valid destination account id and amount");
+        if (createDto.getAccountId() == null || createDto.getDestinationAccountId() == null) {
+            throw new ValidationException("Transaction should contain not null and valid account ids and amount");
         } else if (createDto.getDestinationAccountId().equals(createDto.getAccountId())) {
             throw new ValidationException("Operation with same account id is not supported");
-        } else if (createDto.getAmount().compareTo(BigDecimal.ZERO) <= 0) {
+        } else if (createDto.getAmount() == null || createDto.getAmount().compareTo(BigDecimal.ZERO) <= 0) {
             throw new ValidationException("Transaction amount should have positive value");
         }
     }
