@@ -1,14 +1,15 @@
 package com.revolut.dao.account;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import com.revolut.dao.exception.DaoValidationException;
+import com.revolut.dao.model.Account;
 import com.revolut.dao.model.Currency;
 import com.revolut.dao.model.Transaction;
-import com.revolut.dao.exception.DaoValidationException;
 import com.revolut.dao.transation.InMemoryTransactionDao;
-import com.revolut.dao.model.Account;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -220,6 +221,114 @@ public class InMemoryAccountDaoTest {
 
         // then
         assertThat(result).isEmpty();
+    }
+
+    @Test
+    public void shouldUpdateAllAccounts() {
+        // given
+        Account updateAccount1 = Account.builder()
+                .uuid(UUID_1)
+                .total(BigDecimal.ONE)
+                .currency(CURRENCY_1)
+                .transactionHistory(emptyList())
+                .build();
+        Account updateAccount2 = Account.builder()
+                .uuid(UUID_2)
+                .total(BigDecimal.TEN)
+                .currency(CURRENCY_1)
+                .transactionHistory(emptyList())
+                .build();
+        when(transactionDao.getEntities(account1.getId())).thenReturn(singletonList(Transaction.builder().build()));
+        when(transactionDao.getEntities(account2.getId())).thenReturn(singletonList(Transaction.builder().build()));
+
+        // when
+        Boolean result = accountDao.updateAccounts(Arrays.asList(updateAccount1, updateAccount2));
+
+        // then
+        assertThat(result).isTrue();
+        assertThat(accountDao.getEntity(UUID_1)).isPresent().get().extracting(Account::getTotal).isEqualTo(BigDecimal.ONE);
+        assertThat(accountDao.getEntity(UUID_2)).isPresent().get().extracting(Account::getTotal).isEqualTo(BigDecimal.TEN);
+    }
+
+    @Test
+    public void shouldNotUpdateAllAccountsIfAdditionalTransactionWasMade() {
+        // given
+        Account updateAccount1 = Account.builder()
+                .uuid(UUID_1)
+                .total(BigDecimal.ONE)
+                .currency(CURRENCY_1)
+                .transactionHistory(emptyList())
+                .build();
+        Account updateAccount2 = Account.builder()
+                .uuid(UUID_2)
+                .total(BigDecimal.TEN)
+                .currency(CURRENCY_1)
+                .transactionHistory(emptyList())
+                .build();
+        when(transactionDao.getEntities(account1.getId())).thenReturn(singletonList(Transaction.builder().build()));
+        when(transactionDao.getEntities(account2.getId())).thenReturn(Arrays.asList(Transaction.builder().build(),
+                Transaction.builder().build()));
+
+        // when
+        Boolean result = accountDao.updateAccounts(Arrays.asList(updateAccount1, updateAccount2));
+
+        // then
+        assertThat(result).isFalse();
+        assertThat(accountDao.getEntity(UUID_1)).isPresent().get().isEqualToIgnoringGivenFields(account1, "transactionHistory");
+        assertThat(accountDao.getEntity(UUID_2)).isPresent().get().isEqualToIgnoringGivenFields(account2, "transactionHistory");
+    }
+
+    @Test
+    public void shouldNotUpdateAllAccountsIfAccountRemoved() {
+        // given
+        Account updateAccount1 = Account.builder()
+                .uuid(UUID_1)
+                .total(BigDecimal.ONE)
+                .currency(CURRENCY_1)
+                .transactionHistory(emptyList())
+                .build();
+        Account updateAccount2 = Account.builder()
+                .uuid("removed")
+                .total(BigDecimal.TEN)
+                .currency(CURRENCY_1)
+                .transactionHistory(emptyList())
+                .build();
+        when(transactionDao.getEntities(account1.getId())).thenReturn(singletonList(Transaction.builder().build()));
+
+        // when
+        Boolean result = accountDao.updateAccounts(Arrays.asList(updateAccount1, updateAccount2));
+
+        // then
+        assertThat(result).isFalse();
+        assertThat(accountDao.getEntity(UUID_1)).isPresent().get().isEqualToIgnoringGivenFields(account1, "transactionHistory");
+        assertThat(accountDao.getEntity(UUID_2)).isPresent().get().isEqualToIgnoringGivenFields(account2, "transactionHistory");
+    }
+
+    @Test
+    public void shouldNotUpdateAllAccountsIfNotUpdatedOneOfThem() {
+        // given
+        Account updateAccount1 = Account.builder()
+                .uuid(UUID_1)
+                .total(BigDecimal.ONE)
+                .currency(CURRENCY_1)
+                .transactionHistory(emptyList())
+                .build();
+        Account updateAccount2 = Account.builder()
+                .uuid(UUID_2)
+                .total(BigDecimal.TEN)
+                .currency(null)
+                .transactionHistory(emptyList())
+                .build();
+        when(transactionDao.getEntities(account1.getId())).thenReturn(singletonList(Transaction.builder().build()));
+        when(transactionDao.getEntities(account2.getId())).thenReturn(singletonList(Transaction.builder().build()));
+
+        // when
+        Boolean result = accountDao.updateAccounts(Arrays.asList(updateAccount1, updateAccount2));
+
+        // then
+        assertThat(result).isFalse();
+        assertThat(accountDao.getEntity(UUID_1)).isPresent().get().isEqualToIgnoringGivenFields(account1, "transactionHistory");
+        assertThat(accountDao.getEntity(UUID_2)).isPresent().get().isEqualToIgnoringGivenFields(account2, "transactionHistory");
     }
 
 }
