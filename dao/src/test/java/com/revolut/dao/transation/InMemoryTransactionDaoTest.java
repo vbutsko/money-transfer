@@ -66,7 +66,6 @@ public class InMemoryTransactionDaoTest {
     public void shouldAddNewTransaction() throws DaoValidationException {
         // given
         Transaction newTransaction = Transaction.builder()
-                .uuid(UUID_3)
                 .ownerAccountId(ACCOUNT_ID_1)
                 .otherAccountId(ACCOUNT_ID_2)
                 .amount(BigDecimal.ONE)
@@ -79,7 +78,7 @@ public class InMemoryTransactionDaoTest {
         Transaction result = transactionDao.save(newTransaction);
 
         // then
-        assertThat(newTransaction).isEqualToIgnoringGivenFields(result, "id", "createdAt");
+        assertThat(newTransaction).isEqualToIgnoringGivenFields(result, "uuid", "id", "createdAt");
         assertThat(result.getId()).isNotNull();
         assertThat(result.getCreatedAt()).isNotNull();
     }
