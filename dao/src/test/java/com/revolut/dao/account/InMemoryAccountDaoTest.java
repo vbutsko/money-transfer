@@ -201,4 +201,25 @@ public class InMemoryAccountDaoTest {
         assertThat(instance).isEqualTo(accountDao);
     }
 
+    @Test
+    public void shouldGetAll() {
+        // when
+        List<Account> result = accountDao.getAll();
+
+        // then
+        assertThat(result).containsExactlyInAnyOrder(account1, account2);
+    }
+
+    @Test
+    public void shouldReturnEmptyCollectionIfNoAccounts() {
+        // given
+        accountDao.deleteAll();
+
+        // when
+        List<Account> result = accountDao.getAll();
+
+        // then
+        assertThat(result).isEmpty();
+    }
+
 }
